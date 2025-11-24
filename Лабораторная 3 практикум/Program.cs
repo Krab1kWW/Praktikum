@@ -1,5 +1,7 @@
 ﻿using System;
 
+
+
 class Program
 {
     static bool exit = false;
@@ -17,12 +19,12 @@ class Program
                 Console.WriteLine("4. Поиск в истории");
                 Console.WriteLine("5. Выйти");
 
-                int choice = ToInt("\nВыберите действие:");
+                int choice = Parse.GetInt("\nВыберите действие:");
 
-                if (choice <= 0 || choice >= 5)
+                while (choice <= 0 || choice >= 6)
                 {
-                    Console.WriteLine("Ошибка ввода. Введите число от 1 до 4.");
-                    continue;
+                    Console.WriteLine("Ошибка ввода. Введите число от 1 до 5.");
+                    choice = Parse.GetInt("");
                 }
 
                 switch (choice)
@@ -45,7 +47,7 @@ class Program
                         break;
                     case 5:
                         Console.Clear();
-                        exit = ExitProgram();
+                        exit = Exit.ExitProgram();
                         break;
                 }
             }
@@ -61,6 +63,24 @@ class Program
         }
     }
 
+    
+
+
+
+
+    static void CalculationHistory()
+    {
+        string[] credits;
+    }
+
+
+
+
+
+
+   
+
+   
     static void CalculateLoan()
     {
         int type = Type();
@@ -82,25 +102,12 @@ class Program
         }
     }
 
-
-
-
-
-    static void CalculationHistory()
-    {
-        string[] credits 
-    }
-
-
-
-
-
     static int Type()
     {
         int type;
         do
-        {
-            type = ToInt("Выберите тип платежа (1 - аннуитетный, 2 - дифференцированный)");
+        {   
+            type = Parse.GetInt("Выберите тип платежа (1 - аннуитетный, 2 - дифференцированный)");
             if (type != 1 && type != 2)
             {
                 Console.WriteLine("Ошибка! Введите 1 или 2");
@@ -110,43 +117,11 @@ class Program
         return type;
     }
 
-
-    static double ToDouble(string text)
-    {
-        Console.WriteLine($"{text}");
-        string message = Console.ReadLine();
-
-        if (!double.TryParse(message, out double res))
-            throw new ArgumentException("Введено нечисловое значение.");
-
-        if (res <= 0)
-            throw new ArgumentException("Отрицательные числа не допускаются.");
-
-        if (res > 1000000000000)
-            throw new OverflowException("Слишком большое число.");
-
-        return res;
-    }
-
-    static int ToInt(string text)
-    {
-        Console.WriteLine($"{text}");
-        string message = Console.ReadLine();
-
-        if (!int.TryParse(message, out int res))
-            throw new ArgumentException("Введено нечисловое значение.");
-
-        if (res <= 0)
-            throw new ArgumentException("Отрицательные числа не допускаются.");
-
-        return res;
-    }
-
     static (double loanAmount, double annualRate, int years) GetLoanParameters()
     {
-        double loanAmount = ToDouble("Введите сумму кредита: ");
-        double annualRate = ToDouble("Введите годовую процентную ставку (%):");
-        int years = ToInt("Введите срок кредита (лет): ");
+        double loanAmount = Parse.ToDouble("Введите сумму кредита: ");
+        double annualRate = Parse.ToDouble("Введите годовую процентную ставку (%):");
+        int years = Parse.GetInt("Введите срок кредита (лет): ");
 
         if (years == 0)
             throw new DivideByZeroException("Срок кредита не может быть равен нулю.");
@@ -170,6 +145,7 @@ class Program
 
         return annualRate;
     }
+
 
     static void Annuity()
     {
@@ -244,20 +220,5 @@ class Program
 
 
 
-    static bool ExitProgram()
-    {
-        string input;
-        do
-        {
-            Console.Write("Вы уверены, что хотите выйти? (y/n): ");
-            input = Console.ReadLine().ToLower();
-
-            if (input != "y" && input != "n")
-            {
-                Console.WriteLine("Ошибка ввода. Введите 'y' или 'n'.");
-            }
-        } while (input != "y" && input != "n");
-        Console.Clear();
-        return input == "y";
-    }
+ 
 }
