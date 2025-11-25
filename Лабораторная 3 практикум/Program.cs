@@ -1,7 +1,4 @@
 ﻿using System;
-
-
-
 class Program
 {
     static bool exit = false;
@@ -47,11 +44,11 @@ class Program
                         break;
                     case 3:
                         Console.Clear();
-                        
+                        AnalizeCredit();
                         break;
                     case 4:
                         Console.Clear();
-                        
+                        SearchInHistory();
                         break;
                     case 5:
                         Console.Clear();
@@ -66,7 +63,7 @@ class Program
             finally
             {
                 if (!exit)
-                    Console.WriteLine("Спасибо за использование калькулятора!\n");
+                    Console.WriteLine("\n\nСпасибо за использование калькулятора!\n");
             }
         }
     }
@@ -74,22 +71,24 @@ class Program
 
     static void ShowHistory()
     {
-       if (historySize == 0)
+        Console.WriteLine("==== История расчётов ====");
+        Console.WriteLine($"Количество кредитов: {historySize}\n");
+        if (historySize == 0)
         {
             Console.WriteLine("История пуста.");
             return;
         }
         
-       for(int i = )
-            Console.WriteLine("==== История расчётов ====");
-            Console.WriteLine($"Количество кредитов: {historySize}");
+       for(int i = historySize-1;i >= 0 ; i--)
+        {
+            Console.WriteLine($"Рассчёт номер {historySize - i}.");
+            Console.WriteLine($"Сумма кредита: {amounts[i]:F2} руб.");
+            Console.WriteLine($"Процентная ставка: {rates[i]:F2}%.");
+            Console.WriteLine($"Срок (лет): {terms[i]}.");
+            Console.WriteLine($"Тип платежа: {types[i]}.");
+            Console.WriteLine($"Переплата: {overpayments[i]:F2} руб.\n");
 
-            Console.WriteLine($"Процентная ставка: {rates[i]}");
-            Console.WriteLine($"Срок кредита: {terms}");
-            Console.WriteLine($"Тип платежей: {types}");
-            Console.WriteLine($"Переплата по кредиту: {overpayments}");
-        
-        
+        }
 
     }
 
@@ -153,31 +152,137 @@ class Program
 
 
 
-
-
-    static void CalculateOverpayment()
+    static void AnalizeCredit()
     {
+        Console.WriteLine("==== Анализ кредитной истории =====");
 
+        if (historySize == 0)
+        {
+            Console.WriteLine("История пуста.");
+            return;
+        }
+
+        int mxI = 0, mnI = 0;
+
+        for (int i = 1; i < historySize; i++)
+        {
+            if (overpayments[i] > overpayments[mxI]) mxI = i;
+            if (overpayments[i] < overpayments[mnI]) mnI = i;
+        }
+
+        Console.WriteLine($"Средняя ставка за период: {CalculateRates():F1}%");
+        Console.WriteLine($"Максимальная переплата: {overpayments[mxI]:F0} руб. (кредит {amounts[mxI]:F0} руб. под {rates[mxI]}%)");
+        Console.WriteLine($"Минимальная переплата: {overpayments[mnI]:F0}  руб. (кредит  {amounts[mnI]:F0} руб. под {rates[mnI]}%)");
+        Console.WriteLine($"Изменение ставки относительно последнего расчёта: {LastCalculateRate():F1}%");
+    }
+
+    static double LastCalculateRate()
+    {
+        if (historySize < 2)
+        {
+            Console.WriteLine("Недостаточно данных для сравнения (нужно 2 расчёта)");
+            return 0;
+        }
+
+        double lastRate = rates[historySize - 1];
+        double previousRate = rates[historySize - 2];
+
+        double rateChange = lastRate - previousRate;
+
+        return rateChange;
+    }
+
+    static double MaxOverpay()
+    {
+        double MaxOverpay = overpayments[0];
+       
+        for (int i = historySize - 1; i >= 0; i--)
+        {
+            if (MaxOverpay < overpayments[i]) {MaxOverpay = overpayments[i];}
+        }
+
+        return MaxOverpay;
+    }
+
+    static double MinOverpay()
+    {
+        double MinOverpay = overpayments[0]; 
+      
+        for (int i = historySize - 1; i >= 0; i--)
+        {
+            if (MinOverpay > overpayments[i]) {MinOverpay = overpayments[i];}
+
+        }
+        return MinOverpay;
     }
 
 
+    static double CalculateRates()
+    {
+        double sumRates = 0;
+        for (int i = historySize - 1; i >= 0; i--)
+        { 
+            sumRates += rates[i];
+
+        }
+        double midleOverpay = sumRates / historySize;
+
+        return midleOverpay;
+    }
 
 
+    static void SearchInHistory()
+    {
+        if (historySize == 0)
+        {
+            Console.WriteLine("История пуста.");
+            return;
+        }
 
+        Console.WriteLine("=== Поиск в истории ===");
+        Console.WriteLine("1. Поиск по сумме кредита");
+        Console.WriteLine("2. Поиск по сроку кредита");
 
-  
-   
-    
+        int searchType = Parse.GetInt("Выберите тип поиска (1 или 2):");
 
+        bool found = false;
 
+        if (searchType == 1)
+        {
+            // Поиск по сумме
+            double minAmount = Parse.ToDouble("Введите минимальную сумму кредита: ");
+            double maxAmount = Parse.ToDouble("Введите максимальную сумму кредита: ");
 
+            for (int i = 0; i < historySize; i++)
+            {
+                if (amounts[i] >= minAmount && amounts[i] <= maxAmount)
+                {
+                    Console.WriteLine($"Найден: {amounts[i]:F0} руб., ставка {rates[i]}%, срок {terms[i]} лет, переплата {overpayments[i]:F0} руб.");
+                    found = true;
+                }
+            }
+        }
+        else if (searchType == 2)
+        {
+            // Поиск по сроку
+            int maxYears = Parse.GetInt("Введите максимальный срок (лет): ");
 
+            for (int i = 0; i < historySize; i++)
+            {
+                if (terms[i] <= maxYears)
+                {
+                    Console.WriteLine($"Срок {terms[i]} лет: {amounts[i]:F0} руб. под {rates[i]}%");
+                    found = true;
+                }
+            }
+        }
+        else
+        {
+            Console.WriteLine("Неверный выбор.");
+            return;
+        }
 
+        if (!found) { Console.WriteLine("Кредиты по вашему запросу не найдены."); }
+    }
 
-
-
-
-
-
- 
 }
