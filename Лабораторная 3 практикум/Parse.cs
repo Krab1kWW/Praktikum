@@ -1,7 +1,5 @@
 ﻿internal class Parse
 {
-    //Ввод числа с консоли 
-   
     public static int GetInt(string message)
     {
         Console.WriteLine(message);
