@@ -13,18 +13,29 @@
 
     public static double ToDouble(string text)
     {
-        Console.WriteLine($"{text}");
-        string message = Console.ReadLine();
+        Console.WriteLine(text);
+        while (true)
+        {
+            if (!double.TryParse(Console.ReadLine(), out double res))
+            {
+                Console.WriteLine("Введено нечисловое значение. Попробуйте еще раз:");
+                continue;
+            }
+            if (res <= 0)
+            {
+                Console.WriteLine("Отрицательные числа и ноль не допускаются. Попробуйте еще раз:");
+                continue;
+            }
 
-        if (!double.TryParse(message, out double res))
-            throw new ArgumentException("Введено нечисловое значение.");
+            if (res > 1000000000000)
+            {
+                Console.WriteLine("Слишком большое число. Попробуйте еще раз:");
+                continue;
+            }
 
-        if (res <= 0)
-            throw new ArgumentException("Отрицательные числа не допускаются.");
-
-        if (res > 1000000000000)
-            throw new OverflowException("Слишком большое число.");
-
-        return res;
+            return res;
+        }
     }
+
+
 }

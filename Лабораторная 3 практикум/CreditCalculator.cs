@@ -42,7 +42,7 @@
         Console.WriteLine($"Общая сумма выплат: {totalAmount:F2} руб.");
         Console.WriteLine($"Переплата: {overpayment:F2} руб.");
         Console.WriteLine($"Ежемесячный платеж: {monthlyPayment:F2} руб.");
-        Console.WriteLine($"Срок кредита: {years} лет");
+        Console.WriteLine($"Срок кредита (лет): {years}.");
 
         Program.SaveCalculationHistory(loanAmount, annualRate, years, "аннуитетный", overpayment);
     }
@@ -74,7 +74,7 @@
         Console.WriteLine("\n=== Результаты расчета ===");
         Console.WriteLine($"Сумма кредита: {loanAmount:F2} руб.");
         Console.WriteLine($"Годовая ставка: {annualRate:F2}%");
-        Console.WriteLine($"Срок: {years} лет ({totalMonths} месяцев)");
+        Console.WriteLine($"Срок (лет): {years} ({totalMonths} месяцев)");
         Console.WriteLine($"Общая сумма выплат: {totalPayment:F2} руб.");
         Console.WriteLine($"Переплата: {overpayment:F2} руб.");
         Console.WriteLine($"Первый платеж: {(principalPayment + loanAmount * monthlyRate):F2} руб.");

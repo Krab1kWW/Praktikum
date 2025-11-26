@@ -115,7 +115,6 @@ class Program
                 historySize--;
             }
         }
-
         if (historySize < 50)
         {
             
@@ -257,7 +256,7 @@ class Program
             {
                 if (amounts[i] >= minAmount && amounts[i] <= maxAmount)
                 {
-                    Console.WriteLine($"Найден: {amounts[i]:F0} руб., ставка {rates[i]}%, срок {terms[i]} лет, переплата {overpayments[i]:F0} руб.");
+                    Console.WriteLine($"Найден: {amounts[i]:F0} руб., ставка {rates[i]}%, срок (лет) {terms[i]}, переплата {overpayments[i]:F0} руб.");
                     found = true;
                 }
             }
@@ -271,7 +270,7 @@ class Program
             {
                 if (terms[i] <= maxYears)
                 {
-                    Console.WriteLine($"Срок {terms[i]} лет: {amounts[i]:F0} руб. под {rates[i]}%");
+                    Console.WriteLine($"Срок (лет) {terms[i]}: {amounts[i]:F0} руб. под {rates[i]}%");
                     found = true;
                 }
             }
